@@ -1,3 +1,6 @@
+Known issues:
+- auras and totems are not correctly detecting and updating the people actually missing the buffs
+
 | RaidBuffStatus | Chat |
 | ------------- | ------------- |
 | ![RaidBuffStatus](/preview-images/02.png?raw=true "RaidBuffStatus") | Shift click the missing buffs to send a chat message about them: ![RaidBuffStatus](/preview-images/03.png?raw=true "RaidBuffStatus") |
@@ -10,7 +13,6 @@
 2022-05-27
 - Added Mana sprint warning
 - Remove unused buffs
-- TODO: auras and totems not correctly detecting and updating the people actually missing the buffs
 
 2022-05-17
 - Added Misdirection snitch (shows who MD-ed who if checked)
