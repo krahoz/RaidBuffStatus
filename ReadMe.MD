@@ -1,6 +1,6 @@
 Known issues:
 - auras and totems are not correctly detecting and updating the people actually missing the buffs
-- food and drinks are wotlk only
+- food, drinks, refreshment tables, etc. are wotlk only (only repair bot announcer works)
 
 | RaidBuffStatus | Chat |
 | ------------- | ------------- |
@@ -13,6 +13,7 @@ Known issues:
  ![RaidBuffStatus](/preview-images/06.png?raw=true "RaidBuffStatus") |
 | Other options:
  ![RaidBuffStatus](/preview-images/07.png?raw=true "RaidBuffStatus") |
+| ![RaidBuffStatus](/preview-images/08.png?raw=true "RaidBuffStatus") |
 
 2022-07-01
 - Changed Buffers detection logic  for classless
