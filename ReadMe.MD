@@ -7,6 +7,9 @@ Known issues:
 | ![RaidBuffStatus](/preview-images/02.png?raw=true "RaidBuffStatus") | Shift click the missing buffs to send a chat message about them: ![RaidBuffStatus](/preview-images/03.png?raw=true "RaidBuffStatus") |
 | | Misdirect snitch: ![RaidBuffStatus](/preview-images/04.png?raw=true "RaidBuffStatus") |
 
+2022-07-01
+- Added Buffers display for classless
+
 2022-06-10
 - Removed the whisper buffs functions
 - Removed most of the class restrictions
