@@ -1,6 +1,8 @@
 Known issues:
 - auras and totems are not correctly detecting and updating the people actually missing the buffs
 - food, drinks, refreshment tables, etc. are wotlk only (only repair bot announcer works)
+- have to update some of the auras with the release of new content or change of the spell id
+- the addon might not work on CoA
 
 | RaidBuffStatus | Chat |
 | ------------- | ------------- |
