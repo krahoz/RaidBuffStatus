@@ -1,5 +1,6 @@
 Known issues:
 - auras and totems are not correctly detecting and updating the people actually missing the buffs
+- food and drinks are wotlk only
 
 | RaidBuffStatus | Chat |
 | ------------- | ------------- |
