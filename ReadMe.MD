@@ -7,6 +7,13 @@ Known issues:
 | ![RaidBuffStatus](/preview-images/02.png?raw=true "RaidBuffStatus") | Shift click the missing buffs to send a chat message about them: ![RaidBuffStatus](/preview-images/03.png?raw=true "RaidBuffStatus") |
 | ![RaidBuffStatus](/preview-images/05.png?raw=true "RaidBuffStatus") | Misdirect snitch: ![RaidBuffStatus](/preview-images/04.png?raw=true "RaidBuffStatus") |
 
+| Menu |
+| ------------- |
+| Profiles:
+ ![RaidBuffStatus](/preview-images/06.png?raw=true "RaidBuffStatus") |
+| Other options:
+ ![RaidBuffStatus](/preview-images/07.png?raw=true "RaidBuffStatus") |
+
 2022-07-01
 - Changed Buffers detection logic  for classless
 
