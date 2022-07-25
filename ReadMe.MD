@@ -3,6 +3,7 @@ Known issues:
 - food, drinks, refreshment tables, etc. are wotlk only (only repair bot announcer works)
 - have to update some of the auras with the release of new content or change of the spell id
 - the addon might not work on CoA
+- some menu option functionalities might not work or be buggy
 
 | RaidBuffStatus | Chat |
 | ------------- | ------------- |
