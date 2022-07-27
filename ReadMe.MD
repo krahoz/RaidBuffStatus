@@ -17,6 +17,10 @@ Known issues:
 | Other options:
  ![RaidBuffStatus](/preview-images/07.png?raw=true "RaidBuffStatus") |
 | ![RaidBuffStatus](/preview-images/08.png?raw=true "RaidBuffStatus") |
+| ![RaidBuffStatus](/preview-images/09.png?raw=true "RaidBuffStatus") |
+
+2022-07-27
+- Added a toggle option (default false) to Allow reporting missing buffs to raid without assistant or leader role. The option can be found under Reporting
 
 2022-07-01
 - Changed Buffers detection logic  for classless
