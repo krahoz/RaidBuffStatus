@@ -1317,6 +1317,7 @@ function RaidBuffStatus:OnInitialize()
 --		ShowMissingBlessing = true,
 		ShortMissingBlessing = true,
 		whisperonlyone = true,
+		allowreportingtoraidwithoutraidrights = false,
 		LockWindow = false,
 		IgnoreLastThreeGroups = false,
 		DisableInCombat = true,
@@ -2426,7 +2427,7 @@ function RaidBuffStatus:Say(msg, player, prepend, channel)
 		pre = "RBS::"
 	end
 	local str = pre
-	local canspeak = IsRaidLeader() or IsRaidOfficer() or raid.pug
+	local canspeak = IsRaidLeader() or IsRaidOfficer() or raid.pug or RaidBuffStatus.db.profile.allowreportingtoraidwithoutraidrights
 	for _,s in pairs({strsplit(" ", msg)}) do
 		if #str + #s >= 150 then
 			if player then
@@ -3606,7 +3607,7 @@ function RaidBuffStatus:ButtonClick(self, button, down, buffcheck, cheapspell, r
 				end
 			end
 		elseif action == "report" then
-			local canspeak = IsRaidLeader() or IsRaidOfficer() or raid.pug
+			local canspeak = IsRaidLeader() or IsRaidOfficer() or raid.pug or RaidBuffStatus.db.profile.allowreportingtoraidwithoutraidrights
 			if not canspeak and RaidBuffStatus.db.profile.ReportChat and raid.israid then
 				RaidBuffStatus:OfficerWarning()
 			end

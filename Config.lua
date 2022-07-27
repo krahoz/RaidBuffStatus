@@ -319,6 +319,16 @@ local options = {
 						RaidBuffStatus.db.profile.whisperonlyone = v
 					end,
 				},
+				allowreportingtoraidwithoutraidrights = {
+					type = 'toggle',
+					name = L["Allow reporting to raid without assist/leader"],
+					desc = L["Allows the reporting of missing buffs to the raid without an assist or leader right."],
+					order = 13,
+					get = function(info) return RaidBuffStatus.db.profile.allowreportingtoraidwithoutraidrights end,
+					set = function(info, v)
+						RaidBuffStatus.db.profile.allowreportingtoraidwithoutraidrights = v
+					end
+				},
 -- The aliens stole my brain before I could write the code for this feature.
 --				shortennames = {
 --					type = 'toggle',
