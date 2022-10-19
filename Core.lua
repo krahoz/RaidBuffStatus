@@ -22,7 +22,7 @@ local nextscan = 0
 RaidBuffStatus.timer = false
 local playerid = UnitGUID("player")
 local playername = UnitName("player")
-local _, playerclass = UnitClass("player")
+local playerclass = "DRUID"
 local xperltankrequest = false
 local xperltankrequestt = 0
 local nextfeastannounce = 0
@@ -1783,7 +1783,7 @@ function RaidBuffStatus:DoReport(force)
 	end
 	playerid = UnitGUID("player") -- this never changes but on logging in it may take time before it returns a value
 	playername = UnitName("player") -- ditto
-	_, playerclass = UnitClass("player") -- ditto
+	playerclass = "DRUID"
 	if raid.israid and not raid.isbattle and not incombat then
 		if report.checking.durabilty and GetTime() > nextdurability and oRA and not _G.oRA3 then
 			if #report.durabilitylist > 0 then
@@ -2248,7 +2248,7 @@ function RaidBuffStatus:ReadUnit(unitid, unitindex)
 		if realm and string.len(realm) > 0 then
 			name = name .. "-" .. realm
 		end
-		local class = select(2, UnitClass(unitid))
+		local class = "DRUID"
 		local guid = UnitGUID(unitid) or 0
 		local isDead = UnitIsDeadOrGhost(unitid) or false
 		local rank = 0
@@ -5399,7 +5399,7 @@ function RaidBuffStatus:SelectRezSpell()
 end
 
 function RaidBuffStatus:LibGroupTalents_Update(e, guid, unit, spec, c1, c2, c3)
-	local rcn = raid.classes[select(2, UnitClass(unit))][RaidBuffStatus:UnitNameRealm(unit)]
+	local rcn = raid.classes["DRUID"][RaidBuffStatus:UnitNameRealm(unit)]
 	if rcn == nil then
 		return
 	end
