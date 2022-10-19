@@ -900,6 +900,7 @@ local BF = {
 		raidbuff = false
 	},
 	
+	-- TODO who buffed
 	cheetahpack = {
 		order = 900,
 		list = "cheetahpacklist",
@@ -1174,140 +1175,6 @@ local BF = {
 		end,
 		partybuff = nil,
 	},
-	scroll = {
-		order = 495,
-		list = "scrolllist",
-		check = "checkscroll",
-		default = true,
-		defaultbuff = true,
-		defaultwarning = false,
-		defaultdash = true,
-		defaultdashcombat = false,
-		defaultboss = true,
-		defaulttrash = false,
-		checkzonedout = false,
-		selfbuff = true,
-		timer = false,
-		chat = L["Scroll"],
-		pre = function(self, raid, report)
-			report.suggestedscroll = {}
-			local mb = report.suggestedscroll
-			
-			mb.WARRIOR = {}
-			mb.WARRIOR.All = {}
-			mb.WARRIOR[L["Protection"]] = {}
-
-			mb.WARLOCK = {}
-			mb.WARLOCK.All = {}
-
-			mb.SHAMAN = {}
-			mb.SHAMAN.All = {}
-
-			mb.ROGUE = {}
-			mb.ROGUE.All = {}
-
-			mb.PRIEST = {}
-			mb.PRIEST.All = {}
-
-			mb.PALADIN = {}
-			mb.PALADIN.All = {}
-			mb.PALADIN[L["Holy"]] = {}
-			mb.PALADIN[L["Protection"]] = {}
-			mb.PALADIN[L["Retribution"]] = {}
-
-			mb.MAGE = {}
-			mb.MAGE.All = {}
-
-			mb.HUNTER = {}
-			mb.HUNTER.All = {}
-
-			mb.DRUID = {}
-			mb.DRUID.All = {}
-			mb.DRUID[L["Balance"]] = {}
-			mb.DRUID[L["Feral Combat"]] = {}
-			mb.DRUID[L["Restoration"]] = {}
-
-			mb.DEATHKNIGHT = {}
-			mb.DEATHKNIGHT.All = {}
-			mb.DEATHKNIGHT[L["Frost"]] = {}
-
-			if raid.ClassNumbers.WARLOCK < 1 and raid.ClassNumbers.MAGE < 1 then
-				table.insert(mb.SHAMAN.All, scrollofintellect)
-				table.insert(mb.PRIEST.All, scrollofintellect)
-				table.insert(mb.PALADIN.All, scrollofintellect)
-				table.insert(mb.PALADIN[L["Holy"]], scrollofintellect)
-				table.insert(mb.PALADIN[L["Retribution"]], scrollofintellect)
-				table.insert(mb.HUNTER.All, scrollofintellect)
-				table.insert(mb.DRUID[L["Restoration"]], scrollofintellect)
-				table.insert(mb.DRUID[L["Balance"]], scrollofintellect)
-			end
-
-			if raid.ClassNumbers.DRUID < 1 and raid.ClassNumbers.PALADIN < 1 then
-				table.insert(mb.WARRIOR.All, scrollofprotection)
-			end
-			if raid.ClassNumbers.SHAMAN < 1 and raid.ClassNumbers.DEATHKNIGHT < 1 and #raid.SanctuaryTalent < 1 then
-				table.insert(mb.WARRIOR.All, scrollofstrength)
-				table.insert(mb.ROGUE.All, scrollofstrength)
-				table.insert(mb.PALADIN[L["Protection"]], scrollofstrength)
-				table.insert(mb.PALADIN[L["Retribution"]], scrollofstrength)
-				table.insert(mb.HUNTER.All, scrollofstrength)
-				table.insert(mb.DRUID[L["Feral Combat"]], scrollofstrength)
-				table.insert(mb.WARRIOR.All, scrollofagility)
-				table.insert(mb.ROGUE.All, scrollofagility)
-				table.insert(mb.PALADIN[L["Protection"]], scrollofagility)
-				table.insert(mb.PALADIN[L["Retribution"]], scrollofagility)
-				table.insert(mb.HUNTER.All, scrollofagility)
-				table.insert(mb.DRUID[L["Feral Combat"]], scrollofagility)
-			end
-
-			if raid.ClassNumbers.PRIEST < 1 and raid.ClassNumbers.WARLOCK < 1 then
-				table.insert(mb.PRIEST.All, scrollofspirit)
-				table.insert(mb.MAGE.All, scrollofspirit)
-				table.insert(mb.DRUID[L["Restoration"]], scrollofspirit)
-				table.insert(mb.DRUID[L["Balance"]], scrollofspirit)
-			end
-		end,
-		main = function(self, name, class, unit, raid, report)
-			local mb = report.suggestedscroll
-			local scrollslist = mb[class].All
-			if raid.classes[class][name].talents then
-				local spec = raid.classes[class][name].spec
-				if mb[class][spec] then
-					scrollslist = mb[class][spec]
-				end
-			end
-			if #scrollslist < 1 then
-				return
-			end
-			report.checking.scroll = true
-			local missinglist = {}
-			for _, sc in ipairs(scrollslist) do
-				for _, v in ipairs(sc) do
-					if unit.hasbuff[v] then
-						return
-					end
-				end
-				if RaidBuffStatus.db.profile.ShortMissingBlessing then
-					table.insert(missinglist, sc.shortname)
-				else
-					table.insert(missinglist, sc.name)
-				end
-			end
-			table.insert(report.scrolllist, name .. "(" .. table.concat(missinglist, ", ") .. ")")
-		end,
-		post = nil,
-		icon = "Interface\\Icons\\INV_Scroll_02",
-		update = function(self)
-			RaidBuffStatus:DefaultButtonUpdate(self, report.scrolllist, RaidBuffStatus.db.profile.checkscroll, true, report.scrolllist)
-		end,
-		click = function(self, button, down)
-			RaidBuffStatus:ButtonClick(self, button, down, "scroll")
-		end,
-		tip = function(self)
-			RaidBuffStatus:Tooltip(self, L["Missing a scroll"], report.scrolllist)
-		end,
-		partybuff = nil,
-	},
 	flask = {
 		order = 490,
 		list = "flasklist",
@@ -1513,6 +1380,10 @@ local BF = {
 		partybuff = nil,
 	},
 	
+	---------------
+	-- RaidBuffs --
+	---------------
+	
 	kingsbuff = {
 		order = 461,
 		list = "nokingsbufflist",
@@ -1530,6 +1401,9 @@ local BF = {
 		chat = L["Blessing of Kings"],
 		icon = BSI[25898], -- Blessing of Kings
 		buffsToCheck = { 25898, 20217 },
+		pre = function(self, raid, report)
+			report.nokingsbufflist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.kingsbuff = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.kingsbuff.buffsToCheck, report.nokingsbufflist)
@@ -1566,6 +1440,9 @@ local BF = {
 		chat = L["Blessing of Sanctuary"],
 		icon = BSI[25899], -- Blessing of Sanctuary
 		buffsToCheck = { 25899, 20911 },
+		pre = function(self, raid, report)
+			report.nosanctuarybufflist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.sanctuarybuff = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.sanctuarybuff.buffsToCheck, report.nosanctuarybufflist)
@@ -1602,6 +1479,9 @@ local BF = {
 		chat = L["Blessing of Wisdom"],
 		icon = BSI[27143], -- Blessing of Wisdom
 		buffsToCheck = { 27143, 27142 },
+		pre = function(self, raid, report)
+			report.nowisdombufflist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.wisdombuff = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.wisdombuff.buffsToCheck, report.nowisdombufflist)
@@ -1638,6 +1518,9 @@ local BF = {
 		chat = L["Blessing of Might/Battle Shout"],
 		icon = BSI[27141], -- Blessing of Might
 		buffsToCheck = { 27141, 27140, 2048 },
+		pre = function(self, raid, report)
+			report.nomightbufflist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.mightbuff = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.mightbuff.buffsToCheck, report.nomightbufflist)
@@ -1674,6 +1557,9 @@ local BF = {
 		chat = L["Commanding Shout/Blood Pact"],
 		icon = BSI[469], -- Commanding Shout
 		buffsToCheck = { 469, 27268 },
+		pre = function(self, raid, report)
+			report.nocommandingshoutlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.commandingshout = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.commandingshout.buffsToCheck, report.nocommandingshoutlist)
@@ -1710,6 +1596,9 @@ local BF = {
 		chat = BS[14752], -- Divine Spirit
 		icon = BSI[14752], -- Divine Spirit
 		buffsToCheck = { 25312, 32999 },
+		pre = function(self, raid, report)
+			report.spiritlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.spirit = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.spirit.buffsToCheck, report.spiritlist)
@@ -1746,6 +1635,9 @@ local BF = {
 		chat = BS[1459], -- Arcane Intellect
 		icon = BSI[1459], -- Arcane Intellect
 		buffsToCheck = { 27126, 27127 },
+		pre = function(self, raid, report)
+			report.intellectlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.intellect = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.intellect.buffsToCheck, report.intellectlist)
@@ -1782,6 +1674,9 @@ local BF = {
 		chat = BS[1243], -- Power Word: Fortitude
 		icon = BSI[1243], -- Power Word: Fortitude
 		buffsToCheck = { 25389, 25392 },
+		pre = function(self, raid, report)
+			report.fortitudelist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.fortitude = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.fortitude.buffsToCheck, report.fortitudelist)
@@ -1818,6 +1713,9 @@ local BF = {
 		chat = BS[1126], -- Mark of the Wild
 		icon = BSI[1126], -- Mark of the Wild
 		buffsToCheck = { 26990, 26991 },
+		pre = function(self, raid, report)
+			report.wildlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.wild = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.wild.buffsToCheck, report.wildlist)
@@ -1854,6 +1752,9 @@ local BF = {
 		chat = "Shadow Resistance", --BS[27151], -- Shadow Protection
 		icon = BSI[976], -- Shadow Protection
 		buffsToCheck = { 39374, 25433, 27151 },
+		pre = function(self, raid, report)
+			report.shadowlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.shadow = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.shadow.buffsToCheck, report.shadowlist)
@@ -1890,6 +1791,9 @@ local BF = {
 		chat = "Fire Resistance",
 		icon = BSI[27153], -- Fire Resistance Aura
 		buffsToCheck = { 27153, 25562 },
+		pre = function(self, raid, report)
+			report.nofireauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.fireaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.fireaura.buffsToCheck, report.nofireauralist)
@@ -1926,6 +1830,9 @@ local BF = {
 		chat = "Frost Resistance",
 		icon = BSI[27152], -- Frost Resistance Aura
 		buffsToCheck = { 27152, 25559 },
+		pre = function(self, raid, report)
+			report.nofrostauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.frostaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.frostaura.buffsToCheck, report.nofrostauralist)
@@ -1962,6 +1869,9 @@ local BF = {
 		chat = L["Nature Resistance"],
 		icon = BSI[27045], -- Aspect of the Wild
 		buffsToCheck = { 27045, 25573 },
+		pre = function(self, raid, report)
+			report.natureaspectlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.natureaspect = true
 			-- Aspect of the Wild, Nature Resistance Totem
@@ -1999,6 +1909,9 @@ local BF = {
 		chat = L["Devotion Aura"],
 		icon = BSI[465], -- Devotion Aura
 		buffsToCheck = { 27149 },
+		pre = function(self, raid, report)
+			report.nodevotionauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.devotionaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.devotionaura.buffsToCheck, report.nodevotionauralist)
@@ -2035,6 +1948,9 @@ local BF = {
 		chat = L["Concentration Aura"],
 		icon = BSI[19746], -- Concentration Aura
 		buffsToCheck = { 19746 },
+		pre = function(self, raid, report)
+			report.noconcentrationauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.concentrationaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.concentrationaura.buffsToCheck, report.noconcentrationauralist)
@@ -2071,6 +1987,9 @@ local BF = {
 		chat = L["Retribution Aura"],
 		icon = BSI[27150], -- Retribution Aura
 		buffsToCheck = { 27150 },
+		pre = function(self, raid, report)
+			report.noretributionauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.retributionaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.retributionaura.buffsToCheck, report.noretributionauralist)
@@ -2107,6 +2026,9 @@ local BF = {
 		chat = L["Strength of Earth Totem"],
 		icon = BSI[25527], -- Strength of Earth Totem
 		buffsToCheck = { 25527 },
+		pre = function(self, raid, report)
+			report.nototemstrengthofearthlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.totemstrengthofearth = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.totemstrengthofearth.buffsToCheck, report.nototemstrengthofearthlist)
@@ -2143,6 +2065,9 @@ local BF = {
 		chat = L["Wind Fury Totem"],
 		icon = BSI[8512], -- Wind Fury Totem
 		buffsToCheck = { 8512 },
+		pre = function(self, raid, report)
+			report.nototemwindfurylist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.totemwindfury = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.totemwindfury.buffsToCheck, report.nototemwindfurylist)
@@ -2179,6 +2104,9 @@ local BF = {
 		chat = L["Stoneskin Totem"],
 		icon = BSI[25507], -- Stoneskin Totem
 		buffsToCheck = { 25507 },
+		pre = function(self, raid, report)
+			report.nototemstoneskinlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.totemstoneskin = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.totemstoneskin.buffsToCheck, report.nototemstoneskinlist)
@@ -2215,6 +2143,9 @@ local BF = {
 		chat = "Flametongue Totem/Totem of Wrath",
 		icon = BSI[25557], -- Flame Tongue
 		buffsToCheck = { 25557, 57721 },
+		pre = function(self, raid, report)
+			report.nototemflametonguelist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.totemflametongue = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.totemflametongue.buffsToCheck, report.nototemflametonguelist)
@@ -2251,6 +2182,9 @@ local BF = {
 		chat = "5% attack power", --BS[19506], -- Trueshot Aura
 		icon = BSI[19506], -- Trueshot Aura
 		buffsToCheck = { 19506, 30802 },
+		pre = function(self, raid, report)
+			report.trueshotauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.trueshotaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.trueshotaura.buffsToCheck, report.trueshotauralist)
@@ -2287,6 +2221,9 @@ local BF = {
 		chat = "5% melee/ranged crit ", --BS[29801], -- Rampage, Leader of the Pack
 		icon = BSI[29801],
 		buffsToCheck = { 29801, 17007, 24932 },
+		pre = function(self, raid, report)
+			report.rampagelist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.rampage = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.rampage.buffsToCheck, report.rampagelist)
@@ -2324,6 +2261,9 @@ local BF = {
 		chat = "Spell Crit (3%)",
 		icon = BSI[24858], -- Moonkin Aura
 		buffsToCheck = { 24858, 57721, 51471 },
+		pre = function(self, raid, report)
+			report.nomoonkinauralist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.moonkinaura = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.moonkinaura.buffsToCheck, report.nomoonkinauralist)
@@ -2360,6 +2300,9 @@ local BF = {
 		chat = "Spell Haste (3%)",
 		icon = BSI[3738], -- Wrath of Air Totem
 		buffsToCheck = { 3738, 50172, 853648 },
+		pre = function(self, raid, report)
+			report.nototemwrathofairlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.totemwrathofair = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.totemwrathofair.buffsToCheck, report.nototemwrathofairlist)
@@ -2396,6 +2339,9 @@ local BF = {
 		chat = "All Damage (3%)",
 		icon = BSI[75447], -- Ferocious Inspiration
 		buffsToCheck = { 75447, 731583, 731871 },
+		pre = function(self, raid, report)
+			report.noferociousinspirationlist = {}
+		end,
 		main = function(self, name, class, unit, raid, report)
 			report.checking.ferociousinspiration = true
 			RaidBuffStatus:UpdateNoBuffList(name, unit.hasbuff, RaidBuffStatus.BF.ferociousinspiration.buffsToCheck, report.noferociousinspirationlist)
